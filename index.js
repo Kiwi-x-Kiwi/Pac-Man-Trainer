@@ -40,19 +40,7 @@ class PacMan {
     ctx.beginPath();
     ctx.fillStyle = "black";
     ctx.strokeStyle = "black";
-    if (this.horizontalVelocity < 0) {
-      ctx.moveTo(xCenter - xOffset, yCenter - yOffset);
-      ctx.lineTo(xCenter, yCenter);
-      ctx.lineTo(xCenter - xOffset, yCenter + yOffset);
-      ctx.fill();
-      ctx.fillRect(this.x, yCenter - yOffset, fill, yOffset * 2);
-    } else if (this.horizontalVelocity > 0) {
-      ctx.moveTo(xCenter + xOffset, yCenter - yOffset);
-      ctx.lineTo(xCenter, yCenter);
-      ctx.lineTo(xCenter + xOffset, yCenter + yOffset);
-      ctx.fill();
-      ctx.fillRect(xCenter + xOffset, yCenter - yOffset, fill, yOffset * 2);
-    } else if (this.verticalVelocity > 0) {
+    if (this.verticalVelocity > 0) {
       fill = this.radius - xOffset;
       ctx.moveTo(xCenter - yOffset, yCenter + xOffset);
       ctx.lineTo(xCenter, yCenter);
@@ -66,6 +54,18 @@ class PacMan {
       ctx.lineTo(xCenter + yOffset, yCenter - xOffset);
       ctx.fill();
       ctx.fillRect(xCenter - yOffset, this.y, yOffset * 2, fill);
+    } else if (this.horizontalVelocity > 0) {
+      ctx.moveTo(xCenter + xOffset, yCenter - yOffset);
+      ctx.lineTo(xCenter, yCenter);
+      ctx.lineTo(xCenter + xOffset, yCenter + yOffset);
+      ctx.fill();
+      ctx.fillRect(xCenter + xOffset, yCenter - yOffset, fill, yOffset * 2);
+    } else if (this.horizontalVelocity <= 0) {
+      ctx.moveTo(xCenter - xOffset, yCenter - yOffset);
+      ctx.lineTo(xCenter, yCenter);
+      ctx.lineTo(xCenter - xOffset, yCenter + yOffset);
+      ctx.fill();
+      ctx.fillRect(this.x, yCenter - yOffset, fill, yOffset * 2);
     }
 
     ctx.closePath();
@@ -91,15 +91,15 @@ class PacMan {
         this.verticalVelocity = 0;
         this.horizontalVelocity = +this.velocity;
         break;
-      default:
-        this.verticalVelocity = this.horizontalVelocity = 0;
-        break;
+      // default:
+      //   this.verticalVelocity = this.horizontalVelocity = 0;
+      //   break;
     }
   }
 
   move() {
     this.change = this.mouthGap == 0 ? -this.change : this.change;
-    this.mouthGap = (this.mouthGap + this.change) % (Math.PI / 4);
+    this.mouthGap = (this.mouthGap + this.change) % (Math.PI / 4) + Math.PI/64;
     this.x += this.horizontalVelocity;
     this.y += this.verticalVelocity;
   }
@@ -144,17 +144,22 @@ let board =
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
   ];
 
+let path = [
+  // {direction: "vertical", setValue: 0, start: 0, end: 0} Path format
+]
+
 let speedOfGame = 5;
 
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
-const cellWidth = 25;
+const cellWidth = 20;
 let frameCount = 0;
 let score = 0;
 const energizerRefresh = 5;
 canvas.width = cellWidth * 28;
 canvas.height = cellWidth * 31;
-
+let old_col, old_row;
+let gamePath = midFruitPath;
 
 let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
 // let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
@@ -188,13 +193,29 @@ function drawBoard() {
   ctx.closePath();
 }
 
+function drawPath() {
+  // for(let i = 0; i < cherryPath.length; i++){
+
+  // }
+
+  const index = Math.floor(frameCount / 5);
+  if(index < gamePath.length) drawReferencePoint(gamePath[index].y, gamePath[index].x);
+  else{
+    const lastIndex = gamePath.length -1;
+    ctx.fillStyle = "powderblue";
+    // ctx.font = "10px Arial";
+    // ctx.stroke();
+    ctx.fillRect(gamePath[lastIndex].x*cellWidth, gamePath[lastIndex].y*cellWidth, cellWidth, cellWidth);
+  }
+}
+
 function drawReferencePoint(row, col) {
   ctx.strokeStyle = "white";
   ctx.font = "10px Arial";
 
   ctx.rect(col * cellWidth, row * cellWidth, cellWidth, cellWidth);
   ctx.stroke();
-  ctx.fillText(col + " " + row, cellWidth, cellWidth, cellWidth);
+  // ctx.fillText(col + " " + row, cellWidth, cellWidth, cellWidth);
   // ctx.fill
 }
 
@@ -218,15 +239,14 @@ function checkCollision() {
   else if (pMan.verticalVelocity < 0) pMan_row -= 1;
 
 
-  // if (old_row != pMan_row || old_col != pMan_col) {
-  //   // console.log(pMan_row);
-  //   // console.log(pMan_col);
-  // }
+  if (old_row != pMan_row || old_col != pMan_col) {
+    path.push({x: pMan_col, y: pMan_row })
+  }
 
-  // old_row = pMan_row
-  // old_col = pMan_col
+  old_row = pMan_row
+  old_col = pMan_col
 
-  // drawReferencePoint(pMan_row, pMan_col)
+  drawReferencePoint(pMan_row, pMan_col)
 
   let indexValue = board[pMan_row][pMan_col]
 
@@ -282,6 +302,7 @@ function updateCanvas() {
   drawBoard();
   // drawReferencePoint(13, 20)
   tunnelCheck();
+  drawPath();
   if(pMan.queue !== 0 && atFullIndex() && checkTurn(pMan.queue) === false){
     pMan.changeDirection(pMan.queue);
     // pMan.queue = 0;
@@ -297,7 +318,6 @@ function updateCanvas() {
 
 window.onload = function () {
   drawBoard();
-  // drawPoints();
   pMan.draw();
 
   document.onkeydown = function (e) {
@@ -320,6 +340,6 @@ window.onload = function () {
     }
   }
 
-  setInterval(updateCanvas, 50);
+  setInterval(updateCanvas, 25);
   // requestAnimationFrame(updateCanvas);
 }
