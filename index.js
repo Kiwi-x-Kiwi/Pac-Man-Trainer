@@ -20,8 +20,9 @@ class PacMan {
     this.mouthGap = 0;
     this.verticalVelocity = 0;
     this.horizontalVelocity = 0;
-    this.velocity = cellWidth;
+    this.velocity = cellWidth/speedOfGame;
     this.change = Math.PI / 16;
+    this.queue = 0;
   }
 
   draw() {
@@ -142,6 +143,19 @@ let board =
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
   ];
 
+let speedOfGame = 5;
+
+let old_row = 0;
+let old_col = 0;
+
+const canvas = document.getElementById("board");
+const ctx = canvas.getContext("2d");
+const cellWidth = 25;
+canvas.width = cellWidth * 28;
+canvas.height = cellWidth * 31;
+
+let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
+
 function drawBoard() {
   ctx.fillStyle = "black"
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -165,32 +179,69 @@ function drawBoard() {
   ctx.closePath();
 }
 
-old_row = 0
-old_col = 0
+function drawReferencePoint(row, col) {
+  ctx.strokeStyle = "white";
+  ctx.font = "10px Arial";
+
+  ctx.rect(col * cellWidth, row * cellWidth, cellWidth, cellWidth);
+  ctx.stroke();
+  ctx.fillText(col + " " + row, cellWidth, cellWidth, cellWidth);
+  // ctx.fill
+}
 
 function checkCollision() {
+
+  if((pMan.x / cellWidth) % 1 !== 0){
+    // console.log("moving along x");
+    return false;
+  } else if ((pMan.y / cellWidth) % 1 !== 0){
+    // console.log("moving along y");
+    return false;
+  }
+  
   pMan_row = pMan.y / cellWidth;
-  pMan_col = pMan.x / cellWidth -1;
+  pMan_col = pMan.x / cellWidth;
+
+  if(pMan.horizontalVelocity > 0) pMan_col += 1;
+  else if(pMan.horizontalVelocity < 0) pMan_col -= 1;
+  if(pMan.verticalVelocity > 0) pMan_row += 1;
+  else if(pMan.verticalVelocity < 0) pMan_row -= 1;
+
 
   if (old_row != pMan_row || old_col != pMan_col) {
-    console.log(pMan_row);
-    console.log(pMan_col);
+    // console.log(pMan_row);
+    // console.log(pMan_col);
   }
 
   old_row = pMan_row
   old_col = pMan_col
 
+  // drawReferencePoint(pMan_row, pMan_col)
+
   if (board[pMan_row][pMan_col] == 1) {
-    console.log("collision");
+    // console.log("collision");
     return true;
+  } else if (board[pMan_row][pMan_col] == 0){
+    board[pMan_row][pMan_col] = 2;
   }
 
+  // console.log("collision");
   return false;
+}
+
+function turnAround(keyCode) {
+  switch(keyCode){
+    case 38: return (pMan.verticalVelocity > 0);
+    case 40: return (pMan.verticalVelocity < 0);
+    case 37: return (pMan.horizontalVelocity > 0);
+    case 39: return (pMan.horizontalVelocity < 0);
+  }
 }
 
 function updateCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBoard();
+  // drawReferencePoint(13, 20)
   if(checkCollision() != true){
     pMan.move();
   }
@@ -198,24 +249,24 @@ function updateCanvas() {
   // requestAnimationFrame(updateCanvas);
 }
 
-const canvas = document.getElementById("board");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerHeight * 0.80;
-canvas.height = window.innerHeight * 0.80 * 33 / 29;
-const cellWidth = Math.floor(canvas.width / 29);
-
-let pMan = new PacMan(13 * cellWidth, 23 * cellWidth, cellWidth / 2);
-
-
 window.onload = function () {
   drawBoard();
   // drawPoints();
   pMan.draw();
 
   document.onkeydown = function (e) {
-    console.log(e.keyCode);
-    pMan.changeDirection(e.keyCode)
-    updateCanvas();
+    // console.log(e.keyCode);
+    if(turnAround(e.keyCode) === true){
+      // console.log("Turn around" + pMan.x + " " + pMan.y);
+      pMan.changeDirection(e.keyCode)
+      updateCanvas();
+    }else if ((pMan.x / cellWidth) % 1 === 0 && (pMan.y / cellWidth) % 1 === 0){
+      // console.log(pMan.x + " " +pMan.y);
+      pMan.changeDirection(e.keyCode)
+      updateCanvas();
+    }else{
+      pMan.queue = e.keyCode;
+    }    
   }
 
   setInterval(updateCanvas, 100);
