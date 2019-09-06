@@ -20,7 +20,7 @@ class PacMan {
     this.mouthGap = 0;
     this.verticalVelocity = 0;
     this.horizontalVelocity = 0;
-    this.velocity = cellWidth/speedOfGame;
+    this.velocity = cellWidth / speedOfGame;
     this.change = Math.PI / 16;
     this.queue = 0;
   }
@@ -73,6 +73,7 @@ class PacMan {
   }
 
   changeDirection(direction) {
+    pMan.queue = 0;
     switch (direction) {
       case 38:
         this.horizontalVelocity = 0;
@@ -113,27 +114,27 @@ let board =
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
-    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
+    [1, 3, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 3, 1],
     [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1],
     [1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2],
-    [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2],
-    [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1],
-    [2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2],
-    [2, 2, 2, 2, 2, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 2, 2, 2, 2, 2],
-    [1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+    [2, 2, 2, 2, 2, 1, 0, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 1, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 1, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 2, 2, 2, 2, 2],
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+    [2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2],
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+    [2, 2, 2, 2, 2, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 1, 0, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 1, 2, 2, 2, 2, 2],
+    [2, 2, 2, 2, 2, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 2, 2, 2, 2, 2],
+    [1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
     [1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1],
+    [1, 3, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3, 1],
     [1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1],
     [1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],
@@ -145,16 +146,18 @@ let board =
 
 let speedOfGame = 5;
 
-let old_row = 0;
-let old_col = 0;
-
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const cellWidth = 25;
+let frameCount = 0;
+let score = 0;
+const energizerRefresh = 5;
 canvas.width = cellWidth * 28;
 canvas.height = cellWidth * 31;
 
+
 let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
+// let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
 
 function drawBoard() {
   ctx.fillStyle = "black"
@@ -171,6 +174,12 @@ function drawBoard() {
         ctx.beginPath();
         ctx.fillStyle = "pink";
         ctx.arc(col * cellWidth + offset, row * cellWidth + offset, 2, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.closePath();
+      }else if (dimension == 3 && (frameCount % 16 < energizerRefresh)) {
+        ctx.beginPath();
+        ctx.fillStyle = "pink";
+        ctx.arc(col * cellWidth + offset, row * cellWidth + offset, 7, 0, 2 * Math.PI, false);
         ctx.fill();
         ctx.closePath();
       }
@@ -191,46 +200,53 @@ function drawReferencePoint(row, col) {
 
 function checkCollision() {
 
-  if((pMan.x / cellWidth) % 1 !== 0){
-    // console.log("moving along x");
-    return false;
-  } else if ((pMan.y / cellWidth) % 1 !== 0){
-    // console.log("moving along y");
-    return false;
-  }
-  
+  if(!atFullIndex()) return false;
+  // if ((pMan.x / cellWidth) % 1 !== 0) {
+  //   // console.log("moving along x");
+  //   return false;
+  // } else if ((pMan.y / cellWidth) % 1 !== 0) {
+  //   // console.log("moving along y");
+  //   return false;
+  // }
+
   pMan_row = pMan.y / cellWidth;
   pMan_col = pMan.x / cellWidth;
 
-  if(pMan.horizontalVelocity > 0) pMan_col += 1;
-  else if(pMan.horizontalVelocity < 0) pMan_col -= 1;
-  if(pMan.verticalVelocity > 0) pMan_row += 1;
-  else if(pMan.verticalVelocity < 0) pMan_row -= 1;
+  if (pMan.horizontalVelocity > 0) pMan_col += 1;
+  else if (pMan.horizontalVelocity < 0) pMan_col -= 1;
+  if (pMan.verticalVelocity > 0) pMan_row += 1;
+  else if (pMan.verticalVelocity < 0) pMan_row -= 1;
 
 
-  if (old_row != pMan_row || old_col != pMan_col) {
-    // console.log(pMan_row);
-    // console.log(pMan_col);
-  }
+  // if (old_row != pMan_row || old_col != pMan_col) {
+  //   // console.log(pMan_row);
+  //   // console.log(pMan_col);
+  // }
 
-  old_row = pMan_row
-  old_col = pMan_col
+  // old_row = pMan_row
+  // old_col = pMan_col
 
   // drawReferencePoint(pMan_row, pMan_col)
 
-  if (board[pMan_row][pMan_col] == 1) {
+  let indexValue = board[pMan_row][pMan_col]
+
+  if (indexValue == 1) {
     // console.log("collision");
     return true;
-  } else if (board[pMan_row][pMan_col] == 0){
+  } else if (indexValue === 0){
+    score += 10;
+    board[pMan_row][pMan_col] = 2;
+  } else if (indexValue === 3) {
+    score += 50;
     board[pMan_row][pMan_col] = 2;
   }
 
-  // console.log("collision");
+  console.log("Score ", score);
   return false;
 }
 
 function turnAround(keyCode) {
-  switch(keyCode){
+  switch (keyCode) {
     case 38: return (pMan.verticalVelocity > 0);
     case 40: return (pMan.verticalVelocity < 0);
     case 37: return (pMan.horizontalVelocity > 0);
@@ -238,15 +254,45 @@ function turnAround(keyCode) {
   }
 }
 
+function checkTurn(keyCode) {
+  pMan_row = pMan.y / cellWidth;
+  pMan_col = pMan.x / cellWidth;
+
+  switch (keyCode) {
+    case 38: return (board[pMan_row -1][pMan_col] == 1);
+    case 40: return (board[pMan_row +1][pMan_col] == 1)
+    case 37: return (board[pMan_row][pMan_col - 1] == 1)
+    case 39: return (board[pMan_row][pMan_col + 1] == 1)
+  }
+}
+
+function atFullIndex(){
+  return ((pMan.x / cellWidth) % 1 === 0 && (pMan.y / cellWidth) % 1 === 0);
+}
+
+function tunnelCheck(){
+  if(pMan.y == 14 * cellWidth && (pMan.x + cellWidth < 0 || pMan.x - cellWidth > canvas.width)){
+    console.log("tunnel");
+    pMan.x = (canvas.width - pMan.x);
+  }
+}
+
 function updateCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBoard();
   // drawReferencePoint(13, 20)
-  if(checkCollision() != true){
+  tunnelCheck();
+  if(pMan.queue !== 0 && atFullIndex() && checkTurn(pMan.queue) === false){
+    pMan.changeDirection(pMan.queue);
+    // pMan.queue = 0;
+  }
+  if (checkCollision() != true) {
     pMan.move();
   }
   pMan.draw();
   // requestAnimationFrame(updateCanvas);
+
+  frameCount++;
 }
 
 window.onload = function () {
@@ -256,19 +302,24 @@ window.onload = function () {
 
   document.onkeydown = function (e) {
     // console.log(e.keyCode);
-    if(turnAround(e.keyCode) === true){
+    if (turnAround(e.keyCode) === true) {
       // console.log("Turn around" + pMan.x + " " + pMan.y);
       pMan.changeDirection(e.keyCode)
       updateCanvas();
-    }else if ((pMan.x / cellWidth) % 1 === 0 && (pMan.y / cellWidth) % 1 === 0){
-      // console.log(pMan.x + " " +pMan.y);
-      pMan.changeDirection(e.keyCode)
-      updateCanvas();
-    }else{
+    } else if (atFullIndex()) {
+      if (checkTurn(e.keyCode) && e.keyCode < 41 && e.keyCode > 36){
+        pMan.queue = e.keyCode;
+        // console.log("no change")
+      }else{
+        pMan.changeDirection(e.keyCode)
+        updateCanvas();
+      }
+      
+    } else if (e.keyCode < 41 && e.keyCode > 36){
       pMan.queue = e.keyCode;
-    }    
+    }
   }
 
-  setInterval(updateCanvas, 100);
+  setInterval(updateCanvas, 50);
   // requestAnimationFrame(updateCanvas);
 }
