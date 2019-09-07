@@ -159,7 +159,7 @@ const energizerRefresh = 5;
 canvas.width = cellWidth * 28;
 canvas.height = cellWidth * 31;
 let old_col, old_row;
-let gamePath = midFruitPath;
+let gamePath = applePath2;
 
 let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
 // let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
@@ -240,7 +240,7 @@ function checkCollision() {
 
 
   if (old_row != pMan_row || old_col != pMan_col) {
-    path.push({x: pMan_col, y: pMan_row })
+    path.push({ x: pMan.x / cellWidth, y: pMan.y / cellWidth })
   }
 
   old_row = pMan_row
@@ -300,7 +300,7 @@ function tunnelCheck(){
 function updateCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBoard();
-  // drawReferencePoint(13, 20)
+  // drawReferencePoint(20, 6)
   tunnelCheck();
   drawPath();
   if(pMan.queue !== 0 && atFullIndex() && checkTurn(pMan.queue) === false){
