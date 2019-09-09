@@ -14,10 +14,62 @@
 
   </div>
   <div id="game">
+    <div id = "menu">
+      <!-- <img src = "./sprites/gravestone.png"> -->
+      <header>
+        <input id = "menu-icon" type="image" src="./sprites/gravestone.png" width="50" height="50">
+        
+      </header>
+
+      <h1>Pac-Man Trainer</h1>
+
+      <div>
+        <h2>Level</h2>
+        <select>
+          <option value="cherryPath">Cherry (Lvl 1)</option>
+          <option value="midFruitPath">Mid-Fruit (Lvl 2-4)</option>
+          <option value="applePath">Apple (Lvl 5+)</option>
+        </select>
+      </div>
+
+      <div>
+        <h2>Game Speed</h2>
+        <select>
+          <option value="50">Slow</option>
+          <option value="30">Normal</option>
+          <option value="20">Fast</option>
+          <option value="10">Insanity</option>
+        </select>
+      </div>
+
+      <div>
+        <h2>Path Guide</h2>
+        <select>
+          <option value="off">Off</option>
+          <option value="color">Color Trail</option>
+          <option value="color">Sprite</option>
+        </select>
+      </div>
+
+      <div>
+        <h2>Map Display</h2>
+        <select>
+          <option value="original">Original</option>
+          <option value="dungeon">Dungeon</option>
+          <option value="jail">Jail</option>
+          <option value="cave">Cave</option>
+          <option value="lava">Lava</option>
+          <option value="ice">Ice</option>
+        </select>
+      </div>
+
+      <!-- <button type="button" id="saga">Saga</button> -->
+    </div>
     <canvas id="board"></canvas>
     <!-- <canvas id="dynamic-elements"></canvas> -->
   </div>
 
+  <script type="text/javascript" src="sprites/sprites.js"></script>
   <script type="text/javascript" src="board.js"></script>
   <script type="text/javascript" src="path.js"></script>
   <script type="text/javascript" src="index.js"></script>

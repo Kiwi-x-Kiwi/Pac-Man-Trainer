@@ -105,7 +105,7 @@ class PacMan {
   // Update x, y, and mouthGap
   move() {
     this.change = this.mouthGap == 0 ? -this.change : this.change;
-    this.mouthGap = (this.mouthGap + this.change) % (Math.PI / 4) + Math.PI/64;
+    this.mouthGap = (this.mouthGap + this.change) % (Math.PI / 4) + Math.PI / 64;
     this.x += this.horizontalVelocity;
     this.y += this.verticalVelocity;
   }
@@ -120,14 +120,18 @@ class Ghost {
 
 let path = [] // Array to hold the path Pac Man has travelled in the maze.
 
-const cellWidth = 20; // Size of game images.
-let speedOfGame = 50; // Speed at which canvas updates. The smaller the faster.
+const cellWidth = 25; // Size of game images.
+let speedOfGame = 35; // Speed at which canvas updates. The smaller the faster.
 let numOfTransitions = 5; // Number of frames between each coordinate.
 let frameCount = 0; // Number of frame since begining of game.
 let score = 0;
 const energizerRefresh = 5; // Rate of energizer flash.
 let old_col, old_row;
 let gamePath = cherryPath; // Path for Pac Man to follow.
+
+function drawSprite(x, y, sprite = lava) {
+  ctx.drawImage(sprite, x, y, cellWidth, cellWidth);
+}
 
 // Constructor to initialize new Pac Man.  (x, y, size)
 let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
@@ -149,14 +153,16 @@ function drawBoard() {
       ctx.fillStyle = "blue" // Wall color.
       // ctx.strokeStyle = "blue"
       const dimension = board[row][col];
-      if (dimension == 1) ctx.fillRect(col * cellWidth, row * cellWidth, cellWidth + 0.8, cellWidth + 0.8);
+      if (dimension == 1) {
+        // ctx.fillRect(col * cellWidth, row * cellWidth, cellWidth + 0.8, cellWidth + 0.8);
+      }
       else if (dimension == 0) {
         ctx.beginPath();
         ctx.fillStyle = "pink"; // Pellet Color
         ctx.arc(col * cellWidth + offset, row * cellWidth + offset, 2, 0, 2 * Math.PI, false);
         ctx.fill();
         ctx.closePath();
-      }else if (dimension == 3 && (frameCount % 16 < energizerRefresh)) {
+      } else if (dimension == 3 && (frameCount % 16 < energizerRefresh)) {
         ctx.beginPath();
         ctx.fillStyle = "pink"; // Energizere Color
         ctx.arc(col * cellWidth + offset, row * cellWidth + offset, 7, 0, 2 * Math.PI, false);
@@ -168,24 +174,40 @@ function drawBoard() {
   ctx.closePath();
 }
 
+// Decorate the game board based on the 2D array representation.
+function decorateBoard() {
+
+  // Traverses the 2D array and draws elements based on array value.
+  for (let row = 0; row < board.length; row++) {
+    for (let col = 0; col < board[row].length; col++) {
+      const dimension = board[row][col];
+      if (dimension == 1) {
+        drawSprite(col * cellWidth, row * cellWidth);
+      }
+    }
+  }
+
+}
+
 // Traces the path denoted by an array of coordinates.
 function drawPath() {
-  
+
   // Draws a new coordinate of the gamePath at a constant rate.
   const index = Math.floor(frameCount / numOfTransitions);
-  if(index < gamePath.length) drawReferencePoint(gamePath[index].y, gamePath[index].x);
+  if (index < gamePath.length) drawPoint(gamePath[index].y, gamePath[index].x);
 
   // If it's the last coordinate of gamePath, change color and stay still.
-  else{
-    const lastIndex = gamePath.length -1;
+  else {
+    const lastIndex = gamePath.length - 1;
     ctx.fillStyle = "powderblue";
-    ctx.fillRect(gamePath[lastIndex].x*cellWidth, gamePath[lastIndex].y*cellWidth, cellWidth, cellWidth);
+    // ctx.fillRect(gamePath[lastIndex].x*cellWidth, gamePath[lastIndex].y*cellWidth, cellWidth, cellWidth);
+    drawSprite(gamePath[lastIndex].x * cellWidth, gamePath[lastIndex].y * cellWidth, ghost);
   }
 }
 
 // Draws a rectangular outline at the designated row and col of the maze. 
-function drawReferencePoint(row, col) {
-  ctx.strokeStyle = "red"; // Outline color.
+function drawPoint(row, col, color) {
+  ctx.strokeStyle = "pink"; // Outline color.
   ctx.rect(col * cellWidth, row * cellWidth, cellWidth, cellWidth);
   ctx.stroke();
 
@@ -193,7 +215,7 @@ function drawReferencePoint(row, col) {
 
 // Checks to see if Pac Man is at a full coordinate.
 // Implemented to prevent accessing a decimal value of the array.
-function atFullIndex(){
+function atFullIndex() {
   return (pMan.x / cellWidth) % 1 === 0 && (pMan.y / cellWidth) % 1 === 0;
 }
 
@@ -226,7 +248,7 @@ function checkCollision() {
   if (indexValue == 1) {
     // Wall collision
     return true;
-  } else if (indexValue === 0){
+  } else if (indexValue === 0) {
     // Increment score for pellet and remove pellet from board.
     score += 10;
     board[pMan_row][pMan_col] = 2;
@@ -259,18 +281,22 @@ function checkTurn(keyCode) {
 
   // Check 1 coordinate aheaed in the direction given.
   switch (keyCode) {
-    case 38: return (board[pMan_row -1][pMan_col] == 1);
-    case 40: return (board[pMan_row +1][pMan_col] == 1)
+    case 38: return (board[pMan_row - 1][pMan_col] == 1);
+    case 40: return (board[pMan_row + 1][pMan_col] == 1)
     case 37: return (board[pMan_row][pMan_col - 1] == 1)
     case 39: return (board[pMan_row][pMan_col + 1] == 1)
   }
 }
 
 // Teleports Pac Man if he travels through tunnel.
-function tunnelCheck(){
-  if(pMan.y == 14 * cellWidth && (pMan.x + cellWidth < 0 || pMan.x - cellWidth > canvas.width)){
+function tunnelCheck() {
+  
+  if (pMan.y == 14 * cellWidth && (pMan.x + cellWidth < 0 || pMan.x - cellWidth > canvas.width)) {
     pMan.x = (canvas.width - pMan.x);
+    pMan.queue = 0;
+    return true;
   }
+
 }
 
 // Updates canvas, Pac Man position, and path position.
@@ -278,13 +304,14 @@ function updateCanvas() {
   // Draw static game elements.
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBoard();
+  decorateBoard();
   drawPath();
-
-  // If Pac Man is in tunnel, teleport.
-  tunnelCheck(); 
   
+  // If Pac Man is in tunnel, teleport.
+  tunnelCheck();
+
   // If there's a command in the queue check to see if it can be executed.
-  if(pMan.queue !== 0 && atFullIndex() && checkTurn(pMan.queue) === false){
+  if (pMan.queue !== 0 && atFullIndex() && checkTurn(pMan.queue) === false) {
     pMan.changeDirection(pMan.queue);
   }
 
@@ -296,13 +323,28 @@ function updateCanvas() {
   // Draw Pac Man.
   pMan.draw();
 
-  frameCount++; 
+  frameCount++;
 }
 
 window.onload = function () {
   // Loads the Initial Board.
   drawBoard();
+  decorateBoard();
   pMan.draw();
+
+  document.querySelector("#menu-icon").onclick = function () {
+    const menu = document.getElementById("menu");
+    // console.log(menu);
+
+    if (menu.style.width == "50px") {
+      menu.style.width = "25vw";
+      menu.style.height = "100vh";
+    }
+    else{
+      menu.style.width = "50px";
+      menu.style.height = "50px";
+    }
+  }
 
   document.onkeydown = function (e) {
     // Checks to see if directional input can be executed.
@@ -311,22 +353,22 @@ window.onload = function () {
       pMan.changeDirection(e.keyCode)
       updateCanvas();
     } else if (atFullIndex()) {
-      if (checkTurn(e.keyCode) && e.keyCode < 41 && e.keyCode > 36){
+      if (checkTurn(e.keyCode) && e.keyCode < 41 && e.keyCode > 36) {
         // If at full coordinate but there is obstacles in the inputted
         // direction, hold the command in queue until it can be executed.
         pMan.queue = e.keyCode;
-      }else{
+      } else {
         // If at full coordinate and there is no obstacle in the inputted
         // direction, immediately execute.
         pMan.changeDirection(e.keyCode)
         updateCanvas();
       }
-      
-    } else if (e.keyCode < 41 && e.keyCode > 36){
+
+    } else if (e.keyCode < 41 && e.keyCode > 36) {
       // If not at full coordinate, hold command in queue.
       pMan.queue = e.keyCode;
     }
   }
-  
-  // setInterval(updateCanvas, speedOfGame);
+
+  setInterval(updateCanvas, speedOfGame);
 }
