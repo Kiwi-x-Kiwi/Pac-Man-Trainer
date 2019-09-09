@@ -311,6 +311,10 @@ function surrounded(){
   drawSprite(pMan.x, pMan.y + cellWidth * 1.3, inkyUp)
   drawSprite(pMan.x + cellWidth * 1.3, pMan.y, clydeLeft)
   drawSprite(pMan.x - cellWidth * 1.3, pMan.y, pinkyRight)
+
+  ctx.fillStyle = "red";
+  ctx.font = "30px arial"
+  ctx.fillText("Try again!", 10.6 * cellWidth, 15 * cellWidth);
 }
 
 // Compare the player path and gamePath.
@@ -326,8 +330,11 @@ function checkPath(){
       transitionAnalysis();
     }
   }else{
-    console.log("Congrats, you've made it to the end");
+    console.log("Congrats, you've made it to the end!");
     clearInterval(id);
+    transitionAnalysis();
+    ctx.font = "30px arial"
+    ctx.fillText("Congrats, you've made it to the end!", 2 * cellWidth, 15 * cellWidth);
   }
 }
 
