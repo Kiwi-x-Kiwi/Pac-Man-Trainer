@@ -118,9 +118,12 @@ class Ghost {
 
 // List of global variables.
 
-let path = [] // Array to hold the path Pac Man has travelled in the maze.
+let path = []; // Array to hold the path Pac Man has travelled in the maze.
 
-const cellWidth = 25; // Size of game images.
+// Generate game board
+let board = MASTER_BOARD.map((subArr) => subArr.slice());
+
+let cellWidth = 20; // Size of game images.
 let speedOfGame = 50; // Speed at which canvas updates. The smaller the faster.
 let numOfTransitions = 5; // Number of frames between each coordinate.
 let frameCount = 0; // Number of frame since begining of game.
@@ -130,7 +133,9 @@ let old_col, old_row;
 let gamePath = cherryPath; // Path for Pac Man to follow.
 let defaultSprite = dungeon;
 let isPlaying = false; // Game has not started.
+let guideOff = false; // Game has not started.
 let id; // Game has not started.
+let globalColor = "black"; // Game has not started.
 
 // Constructor to initialize new Pac Man.  (x, y, size)
 let pMan = new PacMan(14 * cellWidth, 23 * cellWidth, cellWidth / 2);
@@ -142,7 +147,7 @@ canvas.height = cellWidth * 31;
 
 // Draws the game board based on the 2D array representation.
 function drawBoard() {
-  ctx.fillStyle = "black" // Background color for the maze.
+  ctx.fillStyle = globalColor // Background color for the maze.
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   let offset = cellWidth / 2;
 
@@ -194,7 +199,7 @@ function decorateBoard() {
 
 // Traces the path denoted by an array of coordinates.
 function drawPath(path = gamePath, color = "pink") {
-
+  if(path == null) return;
   // Draws a new coordinate of the gamePath at a constant rate.
   const index = Math.floor(frameCount / numOfTransitions);
   if (index < path.length) drawPoint(path[index].y, path[index].x, color);
@@ -300,9 +305,8 @@ function tunnelCheck() {
 
 }
 
-function surrounded(){
-  console.log("Hi");
-  
+// Surround Pac Man when player goes off the set path.
+function surrounded(){  
   drawSprite(pMan.x, pMan.y - cellWidth * 1.3, blinkyDown)
   drawSprite(pMan.x, pMan.y + cellWidth * 1.3, inkyUp)
   drawSprite(pMan.x + cellWidth * 1.3, pMan.y, clydeLeft)
@@ -311,19 +315,15 @@ function surrounded(){
 
 // Compare the player path and gamePath.
 // Once veered off the path the player loses.
-function comparePath(){
-  if(path.length < 1) return;
+function checkPath(){
+  if(gamePath == null || path.length < 1) return;
 
   const index = path.length -1;
   if (index < gamePath.length){
     if(path[index].y !== gamePath[index].y || path[index].x !== gamePath[index].x){
-      console.log(index);
-      console.log(`y values: ${path[index].y}, ${gamePath[index].y}`)
-      console.log(`x values: ${path[index].x}, ${gamePath[index].x}`)
-
       clearInterval(id)
-
       surrounded();
+      transitionAnalysis();
     }
   }else{
     console.log("Congrats, you've made it to the end");
@@ -331,10 +331,26 @@ function comparePath(){
   }
 }
 
-function pathComparision(){
+// Call drawPath on both set path and player path.
+function animatePaths(){
+  // Creating a shallow copy of the gamePath and move it forward by two.
+  const tempPath = gamePath.slice(2);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBoard();
+  decorateBoard();
+
+  // Differentiate player and gamePath by using different coloration.
+  drawPath(path, "blue");
+  drawPath(tempPath, "pink");
+  frameCount++;
+}
+
+// Commpare the path the player has taken with set gamePath.
+function comparePath(){
+  clearInterval(id);
   frameCount = 0;
-  drawPath(path, "powderblue");
-  drawPath(gamePath, "pink");
+
+  id = setInterval(animatePaths, 30);
 }
 
 // Updates canvas, Pac Man position, and path position.
@@ -347,9 +363,9 @@ function updateCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBoard();
   decorateBoard();
-  drawPath();
+  if(!guideOff) drawPath();
 
-  if(frameCount % numOfTransitions === 0)   comparePath();
+  if(frameCount % numOfTransitions === 0)   checkPath();
 
   // If Pac Man is in tunnel, teleport.
   tunnelCheck();
@@ -371,7 +387,7 @@ function updateCanvas() {
 }
 
 // Menu transitions
-function transitionMenu() {
+function transitionMenu(toggle) {
   const menu = document.getElementById("menu");
   const menuIcon = document.getElementById("menu-icon");
 
@@ -392,7 +408,8 @@ function transitionMenu() {
   const randIndex = Math.floor(Math.random()*4);
 
   // Expand/ collapse menu and swap out menu icon.
-  if (menu.style.width == "50px") {
+  if (menu.style.width == "50px" || toggle == "on") {
+    
     menu.style.background = "rgb(70, 70, 150)";
     menu.style.width = "25vw";
     menu.style.height = "100vh";
@@ -410,6 +427,68 @@ function transitionMenu() {
 
 }
 
+// Restarts the game
+function restart(){
+  clearInterval(id);
+  frameCount = 0;
+  score = 0;
+  isPlaying = false;
+  guideOff = false;
+  pMan.x = 14 * cellWidth;
+  pMan.y = 23 * cellWidth;
+  pMan.queue = 0;
+  pMan.verticalVelocity = pMan.horizontalVelocity = 0;
+  board = MASTER_BOARD.map((subArr) => subArr.slice());  
+
+  path = [];
+
+  toggleOptions();
+  transitionAnalysis();
+  transitionMenu("on");
+}
+
+// Analysis transitions
+function transitionAnalysis() {
+  const analysis = document.getElementById("analysis");
+  const analysisIcon = document.getElementById("analysis-icon");
+  const analyzeButton = document.getElementById("analyze").onclick = comparePath;
+  const restartButton = document.getElementById("restart").onclick = restart;
+
+  const ghostDown = [
+    "./sprites/original_ghosts/Blinky-Down.png", 
+    "./sprites/original_ghosts/Pinky-Down.png", 
+    "./sprites/original_ghosts/Inky-Down.png",
+    "./sprites/original_ghosts/Clyde-Down.png"
+  ]
+
+  const ghostLeft = [
+    "./sprites/original_ghosts/Blinky-Left.png", 
+    "./sprites/original_ghosts/Pinky-Left.png", 
+    "./sprites/original_ghosts/Inky-Left.png",
+    "./sprites/original_ghosts/Clyde-Left.png"
+  ]
+  
+  const randIndex = Math.floor(Math.random()*4);
+
+  // Expand/ collapse menu and swap out menu icon.
+  if (analysis.style.width !== "25vw") {
+    analysis.style.background = "rgb(70, 70, 150)";
+    analysis.style.width = "25vw";
+    analysis.style.height = "100vh";
+    analysisIcon.src = ghostDown[randIndex];
+    analysisIcon.style.width = "50px";
+    analysisIcon.style.height = "50px";
+  }else {
+    analysis.style.background = "black";
+    analysis.style.width = "0";
+    analysis.style.height = "0";
+    analysisIcon.src = ghostLeft[randIndex];
+    analysisIcon.style.width = "30px";
+    analysisIcon.style.height = "30px";
+  }
+
+}
+
 // Disable options mid-game
 function toggleOptions(){
   if(isPlaying){
@@ -418,32 +497,51 @@ function toggleOptions(){
     document.getElementById("speed").disabled = true;
     document.getElementById("guide").disabled = true;
     document.getElementById("display").disabled = true;
+    // document.getElementById("start").style.display = "none";
+    // document.getElementById("start2").style.display = "block";
+    // document.getElementById("background").disabled = true;
+    // document.getElementById("size").disabled = true;
   }else{
     document.querySelector("#start").disabled = false;
     document.getElementById("path").disabled = false;
     document.getElementById("speed").disabled = false;
     document.getElementById("guide").disabled = false;
     document.getElementById("display").disabled = false;
+    // document.getElementById("start").style.display = "block";
+    // document.getElementById("start2").style.display = "none";
+    // document.getElementById("background").disabled = true;
+    // document.getElementById("size").disabled = true;
   }
 }
 
-
 window.onload = function () {
+  // Start the music
+  (function(src = "./audio/Lavender_Town.mp3"){
+    let bgm = document.getElementById("bgm");    
+  })()
+
   // Loads the Initial Board.
   const menu = document.getElementById("menu");
   const menuIcon = document.getElementById("menu-icon");
+  const analysisIcon = document.getElementById("analysis-icon");
 
   const pathSelector = document.getElementById("path").onchange = function(e){
     switch(e.target.value){
       case "cherryPath": gamePath = cherryPath; break;
       case "midFruitPath": gamePath = midFruitPath; break;
       case "applePath": gamePath = applePath; break;
+      default: gamePath = null;
     }
   };
   const speedSelector = document.getElementById("speed").onchange = function (e) {
     speedOfGame = Number(e.target.value);
   };
-  const guideSelector = document.getElementById("guide");
+  const guideSelector = document.getElementById("guide").onchange = function(e){
+    switch(e.target.value){
+      case "off": guideOff = true; break;
+      case "box": guideOff = false; break;
+    }
+  };
   const displaySelector = document.getElementById("display").onchange = function (e) {
     switch (e.target.value) {
       case "dungeon": defaultSprite = dungeon; break;
@@ -455,6 +553,17 @@ window.onload = function () {
     }
     decorateBoard();
   };
+  // const backgroundSelector = document.getElementById("background").onchange = function (e) {
+  //   globalColor = e.target.value;
+  //   drawBoard();
+  //   decorateBoard();
+  // };
+  // const sizeSelector = document.getElementById("size").onchange = function (e) {
+  //   switch (e.target.value) {
+  //     case "large": cellWidth = 25; break;
+  //     case "small": cellWidth = 20; break;
+  //   }
+  // };
 
   drawBoard();
   decorateBoard();
@@ -462,6 +571,13 @@ window.onload = function () {
 
   // Collapse/expand menu.
   menuIcon.onclick = transitionMenu;
+  analysisIcon.onclick = transitionAnalysis;
+  analysisIcon.onclick = restart;
+  // document.getElementById("start2").onclick = function(){
+  //   clearInterval(id);
+  //   restart();
+  //   transitionAnalysis();
+  // }
 
   // Start game.
   document.querySelector("#start").onclick = function () {

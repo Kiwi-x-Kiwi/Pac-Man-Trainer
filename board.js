@@ -1,6 +1,6 @@
 // 2D array representation of the maze.  Can be customized for different maps.
 // 0 - Empty space (Has points), 1 - Obstacles, 2 - Empty Space, 3 - Energizer.
-let board =
+const MASTER_BOARD =
   [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],

@@ -16,10 +16,8 @@
   </div>
   <div id="game">
     <div id = "menu">
-      <!-- <img src = "./sprites/gravestone.png"> -->
       <header>
         <input id = "menu-icon" type="image" src="./sprites/original_ghosts/Blinky-Down.png" width="50" height="50">
-        
       </header>
 
       <h1>Pac-Man Trainer</h1>
@@ -30,6 +28,7 @@
           <option value="cherryPath">Cherry (Lvl 1)</option>
           <option value="midFruitPath">Mid-Fruit (Lvl 2-4)</option>
           <option value="applePath">Apple (Lvl 5+)</option>
+          <option value="none">None</option>
         </select>
       </div>
 
@@ -53,7 +52,7 @@
       </div>
 
       <div>
-        <label for="display">Map Display</label>
+        <label for="display">Wall Tiles</label>
         <select id ="display">
           <!-- <option value="original">Original</option> -->
           <option value="dungeon">Dungeon</option>
@@ -65,12 +64,42 @@
         </select>
       </div>
 
+      <!-- <div>
+        <label for="background">Background</label>
+        <select id ="background">
+          <option value="original">Original</option>
+          <option value="black">Black</option>
+          <option value="blue">Blue</option>
+          <option value="red">Red</option>
+          <option value="white">White</option>
+        </select>
+      </div> -->
+
+      <!-- <div>
+        <label for="size">Game Size</label>
+        <select id ="size">
+          <option value="large">Large</option>
+          <option value="small">Small</option>
+        </select>
+      </div> -->
+
       <button type="button" id="start">Start</button>
+      <button type="button" id="start2">Restart</button>
     </div>
     <canvas id="board"></canvas>
-    <!-- <canvas id="dynamic-elements"></canvas> -->
+    <div id="analysis">
+      <header>
+        <input id="analysis-icon" type="image" src="./sprites/original_ghosts/Clyde-Down.png" width="50" height="50">
+      </header>
+
+      <button type="button" id="analyze">Analyze Path</button>
+      <button type="button" id="restart">Restart</button>
+    </div>
   </div>
 
+  <iframe src="./audio/Lavender_Town.mp3" allow="autoplay" style="display:none" id="iframeAudio">
+  </iframe> 
+  <!-- <audio id = "bgm" autoplay loop style="display:none"><source src ="./audio/Lavender_Town.mp3" type="audio/mpeg"></audio> -->
   <script type="text/javascript" src="sprites/sprites.js"></script>
   <script type="text/javascript" src="board.js"></script>
   <script type="text/javascript" src="path.js"></script>
