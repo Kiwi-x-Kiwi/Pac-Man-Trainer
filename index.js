@@ -517,7 +517,8 @@ function toggleOptions(){
 window.onload = function () {
   // Start the music
   (function(src = "./audio/Lavender_Town.mp3"){
-    let bgm = document.getElementById("bgm");    
+    let bgm = document.getElementById("bgm");
+    bgm.loop = true;    
   })()
 
   // Loads the Initial Board.
