@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="./css/style.css">
-  <title>Document</title>
+  <link rel="shortcut icon" href="https://www.favicon.cc/logo3d/251.png" />
+  <title>Pac-Man Trainer</title>
 </head>
 
 <body>
@@ -17,15 +18,15 @@
     <div id = "menu">
       <!-- <img src = "./sprites/gravestone.png"> -->
       <header>
-        <input id = "menu-icon" type="image" src="./sprites/gravestone.png" width="50" height="50">
+        <input id = "menu-icon" type="image" src="./sprites/original_ghosts/Blinky-Down.png" width="50" height="50">
         
       </header>
 
       <h1>Pac-Man Trainer</h1>
 
       <div>
-        <h2>Level</h2>
-        <select>
+        <label for="path">Level</label>
+        <select id ="path">
           <option value="cherryPath">Cherry (Lvl 1)</option>
           <option value="midFruitPath">Mid-Fruit (Lvl 2-4)</option>
           <option value="applePath">Apple (Lvl 5+)</option>
@@ -33,37 +34,38 @@
       </div>
 
       <div>
-        <h2>Game Speed</h2>
-        <select>
-          <option value="50">Slow</option>
-          <option value="30">Normal</option>
+        <label for="speed">Game Speed</label>
+        <select id ="speed">
+          <option value="40">Slow</option>
+          <option selected ="selected" value="25">Normal</option>
           <option value="20">Fast</option>
           <option value="10">Insanity</option>
         </select>
       </div>
 
       <div>
-        <h2>Path Guide</h2>
-        <select>
+        <label for="guide">Path Guide</label>
+        <select id ="guide">
           <option value="off">Off</option>
-          <option value="color">Color Trail</option>
-          <option value="color">Sprite</option>
+          <option selected="selected" value="box">Box Guide</option>
+          <!-- <option value="color">Sprite</option> -->
         </select>
       </div>
 
       <div>
-        <h2>Map Display</h2>
-        <select>
-          <option value="original">Original</option>
+        <label for="display">Map Display</label>
+        <select id ="display">
+          <!-- <option value="original">Original</option> -->
           <option value="dungeon">Dungeon</option>
-          <option value="jail">Jail</option>
+          <option value="starry">Starry</option>
           <option value="cave">Cave</option>
           <option value="lava">Lava</option>
-          <option value="ice">Ice</option>
+          <option value="stone">Stone</option>
+          <option value="redbrick">Red Brick</option>
         </select>
       </div>
 
-      <!-- <button type="button" id="saga">Saga</button> -->
+      <button type="button" id="start">Start</button>
     </div>
     <canvas id="board"></canvas>
     <!-- <canvas id="dynamic-elements"></canvas> -->
