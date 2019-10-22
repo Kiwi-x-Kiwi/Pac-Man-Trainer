@@ -11,6 +11,15 @@
 </head>
 
 <body>
+  <div id = "readme">
+    <section id = "readme-text">
+      <p>This game is based on the Pac-Man guide provided by <a target = "#blank" href="https://www.classicgaming.cc/classics/pac-man/play-guide">ClassicGaming.cc</a>.  Please refer to the link for more lore and information regarding the original arcade game, Pac-Man.</br><span>The objective of the game is to travel the maze in accordance to the routes shown below</span>, which are optimal routes used to clear majority of the board in the original arcade version.  The Cherry Pattern is associated with the first level of the original game, the Mid-Fruit Pattern is associated with the 2-4 levels, and finally the Apple Pattern is associated with all the levels after level 4.  <span>Stay on path by following the Path Guide</span>(or turn it off if you've already memorized the path)!  Don't veer off the path or the ghosts will find you immediately!  <span>Use the arrow keys to navigate</span> the maze and the menu options to configure the game layout, speed, and difficulty before the start of each game. <span>At the end of each game you can review the path that you've taken by using the Analyze Path feature</span>.  Best of luck on achieving your personal goals!</p>
+      <img src="./sprites/Cherry_Path.gif">
+      <img src="./sprites/Mid_Fruit_Path.gif">
+      <img src="./sprites/Apple_Path.gif">
+    </section>
+    <button id="hide-readme">Hide Instructions</button>
+  </div>
   <div class="game-intro">
 
   </div>
@@ -83,8 +92,9 @@
         </select>
       </div> -->
 
+      <button type="button" id="instructions">Instructions</button>
       <button type="button" id="start">Start</button>
-      <button type="button" id="start2">Restart</button>
+      <!-- <button type="button" id="start2">Restart</button> -->
     </div>
     <canvas id="board"></canvas>
     <div id="analysis">

@@ -521,6 +521,11 @@ function toggleOptions(){
   }
 }
 
+function hideReadme(){
+  const readme = document.getElementById('readme').classList;
+  readme.toggle('hide-above')
+}
+
 window.onload = function () {
   // Start the music
   (function(src = "./audio/Lavender_Town.mp3"){
@@ -532,6 +537,8 @@ window.onload = function () {
   const menu = document.getElementById("menu");
   const menuIcon = document.getElementById("menu-icon");
   const analysisIcon = document.getElementById("analysis-icon");
+  const hideReadmeButton = document.getElementById("hide-readme");
+  const instructionButton = document.getElementById("instructions");
 
   const pathSelector = document.getElementById("path").onchange = function(e){
     switch(e.target.value){
@@ -581,6 +588,8 @@ window.onload = function () {
   menuIcon.onclick = transitionMenu;
   analysisIcon.onclick = transitionAnalysis;
   analysisIcon.onclick = restart;
+  hideReadmeButton.onclick = hideReadme;
+  instructionButton.onclick = hideReadme;
   // document.getElementById("start2").onclick = function(){
   //   clearInterval(id);
   //   restart();
